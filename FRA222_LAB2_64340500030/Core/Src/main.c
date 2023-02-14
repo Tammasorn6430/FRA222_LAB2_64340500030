@@ -52,8 +52,10 @@ typedef struct Data{
 
 data buff[10];
 
-
+int voltage = 0, temperature = 0;
 float finalVolt, finalTemp;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,18 +115,19 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-	int voltage = 0;
-	int temperature = 0;
-	for (int k = 0; k < 10; k++) {
-		voltage += buff[k].V;
-		temperature += buff[k].T;
+	static uint32_t timestamp = 0;
+	if (HAL_GetTick() >= timestamp) {
+		timestamp = HAL_GetTick() + 1000;
+		for (int k = 0; k < 10; k++) {
+			voltage += buff[k].V;
+			temperature += buff[k].T;
+		}
+		finalVolt = ((voltage/10.0)/4096.0)*3.3;
+		finalTemp = (((((temperature/10.0)/4096.0)*3.3*1000)-760)/2.5)+25+273.15;
+
+		voltage = 0;
+		temperature = 0;
 	}
-
-	finalVolt = ((voltage/10.0)/4096.0)*3.3;
-	finalTemp = (((((temperature/10.0)/4096.0)*3.3*1000)-760)/2.5)+25;
-
-	voltage = 0;
-	temperature = 0;
   }
   /* USER CODE END 3 */
 }
