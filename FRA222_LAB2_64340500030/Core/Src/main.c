@@ -49,11 +49,11 @@ typedef struct Data{
 	uint16_t V;
 	uint16_t T;
 }data;
-
 data buff[10];
 
+float voltageFull = 0;
 int voltage = 0, temperature = 0;
-float finalVolt, finalTemp;
+float finalVolt, finalTempC, finalTempK;
 
 
 /* USER CODE END PV */
@@ -123,7 +123,9 @@ int main(void)
 			temperature += buff[k].T;
 		}
 		finalVolt = ((voltage/10.0)/4096.0)*3.3;
-		finalTemp = (((((temperature/10.0)/4096.0)*3.3*1000)-760)/2.5)+25+273.15;
+		voltageFull = finalVolt*2;
+		finalTempC = (((((temperature/10.0)/4096.0)*3.3*1000)-760)/2.5)+25;
+		finalTempK = finalTempC + 273.15;
 
 		voltage = 0;
 		temperature = 0;
